@@ -1,0 +1,14 @@
+step,issue,count,action
+missing,zero-byte files,0,drop
+missing,empty class folders,0,none needed
+format,mixed-case extensions (.JPG vs .jpg),1678,normalised in metadata column `ext`; raw files untouched
+format,filename class differs from folder class,20,flagged (see decision cell below)
+corrupt,unreadable images,0,drop
+duplicates,exact duplicate images (extra copies),1485,drop (keep first; properly named file preferred)
+duplicates,files in cross-class exact duplicates,20,drop only the mislabeled copy (in Ghain folder)
+duplicates,"near-duplicates (same class, same dhash)",6674,flag only (augmentation copies)
+outliers,IQR outliers on any image statistic (any flag),5586,flag only
+outliers,near-blank images (contrast < 5),0,drop
+videos,corrupt / unreadable videos,0,drop
+videos,exact duplicate videos,0,drop (keep first)
+videos,frame-count outliers (IQR within class),2,flag only
