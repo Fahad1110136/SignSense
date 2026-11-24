@@ -1,0 +1,4 @@
+model,params_M,size_MB,latency_ms_gpu_b1,throughput_img_s_gpu_b64
+Baseline CNN,1.03,20.7,116.4,7
+MobileNetV2,2.3,26.5,47.0,21
+EfficientNet-B0,4.1,33.9,75.2,13
