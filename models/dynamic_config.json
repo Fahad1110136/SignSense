@@ -1,0 +1,24 @@
+{
+ "velocity": true,
+ "augmentation": true,
+ "primary": "RF",
+ "best": {
+  "RF": {},
+  "LSTM": {
+   "units": 32,
+   "dropout": 0.3
+  },
+  "CNN1D": {
+   "filters": 32,
+   "dropout": 0.3
+  },
+  "GRU": {
+   "units": 32,
+   "dropout": 0.3
+  },
+  "MLP": {
+   "hidden": 256,
+   "dropout": 0.3
+  }
+ }
+}

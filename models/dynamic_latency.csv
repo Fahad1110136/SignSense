@@ -1,0 +1,5 @@
+model,params,cpu_latency_ms_per_video
+LSTM,20867,4.4
+CNN1D,26147,2.3
+GRU,15843,4.06
+MLP,2894979,3.74

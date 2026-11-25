@@ -1,0 +1,5 @@
+comparison,mean_diff,ci_low,ci_high,clearly_different
+RF - LSTM,0.016271186440677952,0.0,0.05084745762711862,False
+RF - CNN1D,0.0,0.0,0.0,False
+RF - GRU,0.03448474576271186,0.0,0.0847457627118644,False
+RF - MLP,0.0,0.0,0.0,False
