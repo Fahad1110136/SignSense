@@ -1,0 +1,28 @@
+{
+ "static_model": "Ensemble",
+ "typer": {
+  "letter_conf": 0.5,
+  "stable_frames": 3,
+  "dynamic_conf": 0.6,
+  "control_conf": 0.83,
+  "control_frames": 8,
+  "neutral_frames": 3,
+  "require_neutral": "same",
+  "correct_words": true,
+  "max_dist": 1
+ },
+ "router": {
+  "tau": 0.3264086484909048,
+  "window_seconds": 0.35,
+  "still_frames": 8,
+  "min_segment": 20
+ },
+ "control_classifier": "HistGradientBoosting",
+ "ctrl_threshold": 0.83,
+ "files": {
+  "control": "control_gesture_clf.joblib",
+  "dynamic_rf": "dynamic_rf.joblib",
+  "lexicon": "urdu_lexicon.txt",
+  "engine": "typing_engine.py"
+ }
+}
