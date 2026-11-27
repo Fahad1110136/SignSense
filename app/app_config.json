@@ -1,0 +1,48 @@
+{
+ "static": {
+  "mode": "ensemble",
+  "files": [
+   "baseline_cnn_fp32.keras",
+   "mobilenetv2_fp32.keras",
+   "efficientnetb0_fp32.keras"
+  ],
+  "input_size": 224,
+  "pad_fill_rgb": [
+   175,
+   159,
+   153
+  ],
+  "cpu_ms_per_frame": 222.0,
+  "rejected_float32_models": []
+ },
+ "dynamic": {
+  "mode": "push_to_record",
+  "file": "dynamic_rf.joblib",
+  "frames": 88,
+  "max_record_seconds": 4
+ },
+ "control": {
+  "file": "control_gesture_clf.joblib",
+  "threshold": 0.83,
+  "classes": [
+   "delete",
+   "other",
+   "space"
+  ]
+ },
+ "typer": {
+  "letter_conf": 0.5,
+  "stable_frames": 5,
+  "dynamic_conf": 0.6,
+  "control_conf": 0.83,
+  "control_frames": 8,
+  "neutral_frames": 3,
+  "require_neutral": "same",
+  "correct_words": true,
+  "max_dist": 1
+ },
+ "lexicon_file": "urdu_lexicon.txt",
+ "engine_file": "typing_engine.py",
+ "landmarker_model_url": "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
+ "notes": "Automatic motion routing was evaluated and rejected (13/59 dynamic test videos found); dynamic letters use push-to-record."
+}

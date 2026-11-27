@@ -4,9 +4,11 @@ matplotlib
 seaborn
 opencv-python
 Pillow
-scikit-learn
 tqdm
-mediapipe
 imagehash
 jupyter
+gradio
 tensorflow
+scikit-learn
+joblib
+mediapipe

@@ -1,8 +1,6 @@
 """
 SignSense typing engine: turns per-frame recognition events into Urdu text.
-
 No TensorFlow dependency. Used by the pipeline notebook (simulation) and by the web app.
-
 Pieces
     LETTER_MAP / CHAR_TO_CLASS  dataset class name <-> Urdu character
     Lexicon                     dictionary correction (edit distance) applied when a word ends
@@ -28,6 +26,7 @@ ALPHABET = set(LETTER_MAP.values())
 DYNAMIC_CLASSES = ['2-Hay', 'Alifmad', 'Aray', 'Jeem']
 STATIC_CLASSES = sorted(set(LETTER_MAP) - set(DYNAMIC_CLASSES))
 
+
 def edit_distance(a, b):
     prev = list(range(len(b) + 1))
     for i, ca in enumerate(a, 1):
@@ -36,6 +35,7 @@ def edit_distance(a, b):
             cur.append(min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (ca != cb)))
         prev = cur
     return prev[-1]
+
 
 class Lexicon:
     """Word list for correction. Only words made of the 40 dataset letters are kept."""
@@ -62,6 +62,7 @@ class Lexicon:
         best = [w for d, w in cands if d == cands[0][0]]
         return (best[0], True) if len(best) == 1 else (word, False)
 
+
 @dataclass
 class TyperConfig:
     letter_conf: float = 0.9       # minimum confidence of a static letter frame
@@ -73,6 +74,7 @@ class TyperConfig:
     require_neutral: str = 'same'  # 'same': the same letter twice needs a neutral gap; 'all': every letter does
     correct_words: bool = True     # dictionary correction when a word ends
     max_dist: int = 1
+
 
 class SignTyper:
     def __init__(self, cfg=None, lexicon=None):
@@ -167,6 +169,7 @@ class SignTyper:
             return self._step_key((kind,), c.control_frames)
         raise ValueError(kind)
 
+
 def decide_event(hand_detected, p_space, p_delete, letter_probs, letter_names, control_conf=0.9):
     """One frame -> (kind, label, confidence). Control gestures take priority over letters."""
     if not hand_detected:
@@ -178,11 +181,13 @@ def decide_event(hand_detected, p_space, p_delete, letter_probs, letter_names, c
     i = int(np.argmax(letter_probs))
     return 'letter', letter_names[i], float(letter_probs[i])
 
+
 def resample_segment(seg, T=88):
     """List/array of (63,) landmark vectors -> (X (T,63) float32, M (T,) bool), uniformly resampled like Phase 1."""
     seg = np.asarray(seg, np.float32)
     idx = np.linspace(0, len(seg) - 1, T).round().astype(int)
     return seg[idx], np.ones(T, bool)
+
 
 def dynamic_features(X, M):
     """Same features as the dynamic Random Forest of Phase 2. X: (N,T,63), M: (N,T) bool -> (N, 508)."""
@@ -192,10 +197,12 @@ def dynamic_features(X, M):
     F = np.concatenate([F, V], axis=-1).astype('float32')
     return np.concatenate([F.mean(1), F.std(1), F.min(1), F.max(1)], axis=1)
 
+
 def window_extent(W):
     """Motion measure of a window of landmark vectors: largest RMS distance of any frame from the window mean."""
     W = np.asarray(W, np.float32)
     return float(np.sqrt(((W - W.mean(0)) ** 2).mean(1)).max())
+
 
 class MotionRouter:
     """Streaming splitter. update(vec) -> (state, segment). vec = 63 normalized landmarks or None (no hand).

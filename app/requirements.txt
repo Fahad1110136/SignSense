@@ -1,0 +1,7 @@
+gradio
+tensorflow
+scikit-learn
+joblib
+numpy
+opencv-python
+mediapipe
