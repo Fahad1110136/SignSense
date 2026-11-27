@@ -1,0 +1,4 @@
+model,acc_original_saved,acc_original_rerun,acc_float32,argmax_agreement,max_abs_prob_diff,disagreements,float32_right_on_them,original_right_on_them,accepted
+Baseline CNN,0.7767,0.7767,0.7767,1.0,0.00604,0,0,0,True
+MobileNetV2,0.8567,0.8567,0.8567,1.0,0.00024,0,0,0,True
+EfficientNet-B0,0.82,0.82,0.8267,0.9333,0.82773,20,8,6,True

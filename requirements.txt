@@ -9,3 +9,4 @@ tqdm
 mediapipe
 imagehash
 jupyter
+tensorflow

@@ -1,0 +1,5 @@
+option,cpu_ms_per_frame,params_M,file_MB,frames_per_second
+Baseline CNN,99.0,1.03,4.3,10.1
+MobileNetV2,55.3,2.3,9.8,18.1
+EfficientNet-B0,67.6,4.1,17.2,14.8
+Ensemble (3 models),222.0,7.43,31.3,4.5
