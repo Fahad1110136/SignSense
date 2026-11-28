@@ -24,6 +24,7 @@ class Session:
         self.recording, self.buf = False, []
         self.cur_top3, self.last_top3 = [], []
         self.last_event, self.ms, self.pts = 'ready', 0.0, None
+        self.actions = []          # log of committed actions (used by live_test.py)
 
     # ---- settings coming from the UI sliders ----
     def apply_settings(self, letter_conf, stable_frames, correct_words):
@@ -64,11 +65,13 @@ class Session:
     # ---- dynamic letters: push-to-record ----
     def _finish_dynamic(self):
         if len(self.buf) < MIN_GESTURE_FRAMES:
-            self.last_event = f'gesture too short or hand not visible ({len(self.buf)} frames)'; self.buf = []; return
+            self.last_event = f'gesture too short or hand not visible ({len(self.buf)} frames)'
+            self.actions.append({'action': 'dynamic_short', 'frames': len(self.buf), 't': time.time()}); self.buf = []; return
         X, M = eng.resample_segment(self.buf, 88)
         probs = self.rec.dynamic_probs(eng.dynamic_features(X[None], M[None]))
         k = int(np.argmax(probs)); label, conf = DYNAMIC[k], float(probs[k])
         a = self.typer.step('dynamic', label, conf)
+        self.actions.append({'action': 'dynamic', 'label': label, 'conf': conf, 'typed': bool(a), 'top3': [l for l, _ in top_k(probs, DYNAMIC, 3)], 't': time.time()})
         self.last_top3 = top_k(probs, DYNAMIC, 3) if a else self.last_top3
         self.last_event = (f'dynamic letter {label} ({conf:.0%}) typed' if a else f'dynamic gesture {label} rejected (confidence {conf:.0%} is below {self.typer.cfg.dynamic_conf:.0%})')
         self.buf = []
@@ -82,7 +85,7 @@ class Session:
         t0 = time.time()
         try:
             if mirror:
-                frame = frame[:, ::-1]
+                frame = np.ascontiguousarray(frame[:, ::-1])
             vec, self.pts = self.rec.landmarks(frame)
             if record:                                 # collecting a dynamic gesture
                 if not self.recording:
@@ -115,6 +118,7 @@ class Session:
                 self.last_event = f'sees control gesture {kind} ({conf:.0%})'
         a = self.typer.step(kind, label, conf)
         if a:
+            self.actions.append({**a, 'label': label, 't': time.time()})
             if a['action'] == 'letter':
                 self.last_top3 = self.cur_top3
                 self.last_event = f'typed {a["char"]} ({label})'

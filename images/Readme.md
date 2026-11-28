@@ -102,3 +102,116 @@ After normalization the channels are centred near 0 with a spread near 1.
 ![19](19_landmark_sequences.png)
 Hand detection rate per dynamic class and the normalized index-fingertip trajectories over time.
 Visibly different curves per class show the landmark sequences carry enough signal for the LSTM.
+
+## Static letter models (`modeling_setup.ipynb`, `static_models.ipynb`)
+ 
+**p2_01_augmentation_check.png**
+![p2_01](p2_01_augmentation_check.png)
+Original validation images (top) and their augmented versions (bottom): small rotation, shift, zoom, contrast and brightness changes.
+No horizontal flips are used, since they would turn a right hand into a left hand.
+ 
+**p2_02_static_training_curves.png**
+![p2_02](p2_02_static_training_curves.png)
+Validation accuracy and loss per epoch for the baseline CNN, MobileNetV2 and EfficientNet-B0 (dotted line = start of fine-tuning).
+All models reach about 99.7% training accuracy but only about 91-93% validation accuracy, so they overfit to the training people.
+ 
+**p2_03_static_model_comparison.png**
+![p2_03](p2_03_static_model_comparison.png)
+Validation accuracy and macro-F1 (all images and original images only) of the three static models.
+MobileNetV2 (93.2%) and the baseline CNN (92.8%) are tied on validation; EfficientNet-B0 is lower (90.9%).
+ 
+**p2_04_mobilenet_tuning.png**
+![p2_04](p2_04_mobilenet_tuning.png)
+Validation macro-F1 of four MobileNetV2 fine-tuning setups (30 or 80 unfrozen layers, learning rate 1e-4 or 3e-5).
+Unfreezing 80 layers at 1e-4 is clearly best (0.931); the best setup sits at the edge of the grid.
+ 
+## Static model test evaluation (`static_evaluation.ipynb`)
+ 
+**p2_05_static_test_comparison.png**
+![p2_05](p2_05_static_test_comparison.png)
+Test accuracy with 95% subject-level bootstrap intervals: baseline 80.5%, EfficientNet-B0 85.5%, MobileNetV2 87.4%, 3-model ensemble 89.8%.
+Every model drops from validation to test; the pretrained models generalise to new people better than the baseline.
+ 
+**p2_06_confusion_matrix.png**
+![p2_06](p2_06_confusion_matrix.png)
+Row-normalised test confusion matrix of MobileNetV2 over the 36 static letters.
+The strong diagonal shows most letters are recognised; off-diagonal cells mark the letters that get mixed up.
+ 
+**p2_07_per_class_f1.png**
+![p2_07](p2_07_per_class_f1.png)
+Per-letter test F1 for every model, sorted from weakest to strongest.
+The images no model gets right are concentrated in Zay, Taay, Tay, Nuungh, Kiaf and Fay.
+ 
+**p2_08_top_confusions.png**
+![p2_08](p2_08_top_confusions.png)
+The 15 most frequent letter mix-ups of MobileNetV2 on the test set.
+These are the visually similar signs that no amount of tuning is likely to separate completely.
+ 
+**p2_09_error_examples.png**
+![p2_09](p2_09_error_examples.png)
+The 24 most confident mistakes of MobileNetV2 with true label, predicted label and confidence.
+Looking at them separates real model errors from very similar signs and poor photos.
+ 
+**p2_10_confidence_analysis.png**
+![p2_10](p2_10_confidence_analysis.png)
+Confidence of correct versus wrong predictions, and accuracy against coverage as the confidence threshold rises.
+It shows the trade-off behind the confidence setting used by the real-time pipeline.
+ 
+**p2_11_error_by_factor.png**
+![p2_11](p2_11_error_by_factor.png)
+Test accuracy per person, original versus generated images, and by brightness and sharpness quartile.
+It shows whether errors come from particular people or from image quality.
+ 
+## Dynamic letter models (`dynamic_models.ipynb`)
+ 
+**p2_12_dynamic_ablation.png**
+![p2_12](p2_12_dynamic_ablation.png)
+Cross-validated macro-F1 of the LSTM with and without velocity features and augmentation.
+Velocity plus augmentation scored best (97.9%), but the gap is within the fold-to-fold spread.
+ 
+**p2_13_dynamic_tuning.png**
+![p2_13](p2_13_dynamic_tuning.png)
+Cross-validated macro-F1 of LSTM and GRU for 32/64/128 units and dropout 0.3/0.5.
+The smallest LSTM (32 units, dropout 0.3) is best at 0.985; larger models do not help with only 334 videos.
+ 
+**p2_14_dynamic_cv_comparison.png**
+![p2_14](p2_14_dynamic_cv_comparison.png)
+Best configuration of each model family under 5-fold cross-validation: Random Forest 0.988, LSTM 0.985, CNN1D 0.981, GRU 0.967, MLP 0.963.
+All top models are within noise of each other; the Random Forest is the steadiest across folds.
+ 
+**p2_15_dynamic_test_comparison.png**
+![p2_15](p2_15_dynamic_test_comparison.png)
+Test accuracy of each family on the 59 held-out videos with bootstrap intervals.
+Random Forest, CNN1D and MLP get 59/59, LSTM 98.3%, GRU 96.6%; the test set is too small to rank them.
+ 
+**p2_16_dynamic_confusion.png**
+![p2_16](p2_16_dynamic_confusion.png)
+Test confusion matrix of the Random Forest over the four dynamic letters.
+All 59 test videos are classified correctly.
+ 
+**p2_17_dynamic_error_analysis.png**
+![p2_17](p2_17_dynamic_error_analysis.png)
+Confidence against the share of frames with a detected hand for every test video, and accuracy against coverage.
+The hand was detected in about 98% of frames of correctly classified videos.
+ 
+## 🕹️ Pipeline (`pipeline.ipynb`)
+ 
+**p2_18_control_gestures.png**
+![p2_18](p2_18_control_gestures.png)
+Recall of the space and delete gestures against false alarms on held-out people's letters and video frames, plus the blocked cross-validation confusion matrix.
+At the chosen threshold of 0.83, recall is about 99% (space) and 98.5% (delete) with false alarms around 0.2% per frame.
+ 
+**p2_19_router_calibration.png**
+![p2_19](p2_19_router_calibration.png)
+Motion of still holds against moving dynamic gestures, used to calibrate an automatic still/moving router.
+The two ranges overlap, so the router failed (13 of 59 gestures found) and the app uses a push-to-record button instead.
+ 
+**p2_20_pipeline_sweep.png**
+![p2_20](p2_20_pipeline_sweep.png)
+Simulated word accuracy of the whole pipeline for different confidence thresholds and stability settings (dictionary words and unknown words).
+The 3-model ensemble with a low confidence threshold works best; 3 and 5 stable frames score the same in simulation.
+ 
+**p2_21_dictionary_effect.png**
+![p2_21](p2_21_dictionary_effect.png)
+Word accuracy and character error rate with and without dictionary correction, and the share of words fixed or broken.
+Correction lifts dictionary words from 62% to 81% but does not help unknown words such as names.
