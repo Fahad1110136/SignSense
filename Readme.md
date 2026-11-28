@@ -220,6 +220,17 @@ SignSense/
 | 2 | `pipeline` | control gestures, router study, typing engine, simulation |
 | 2 | `app_prep` | float32 export, CPU speed, app configuration |
 
+## 📚 Detailed documentation
+
+Each main folder has its own readme with the details of its files and results.
+
+| Folder | Readme | What you will find |
+|---|---|---|
+| `dataset/` | [dataset/Readme.md](dataset/Readme.md) | Source and license of the data, every data file and which notebook produced it, letter names with Urdu characters, train/validation/test splits |
+| `images/` | [images/Readme.md](images/Readme.md) | All figures from the notebooks, each with a short note on what it shows |
+| `models/` | [models/Readme.md](models/Readme.md) | The trained models, evaluation tables and configuration files, a results summary, and how to load or regenerate the models |
+| `app/` | [app/Readme.md](app/Readme.md) | How to run the web app, its tabs and settings, the files in the app folder, how a frame is processed, and troubleshooting |
+
 ## ▶️ How to run
 
 **Notebooks (Google Colab).** The data is large, so run the notebooks in Colab, in the order above, with *Runtime → Run all*. Phase 2 notebooks read and write a Google Drive folder `MyDrive/SignSense_data` that holds the Phase 1 outputs. `static_models` and `static_evaluation` need a **T4 GPU**; `dynamic_models` runs on either; `pipeline`, `app_prep` and the app run on CPU.
