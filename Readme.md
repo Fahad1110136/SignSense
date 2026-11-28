@@ -160,7 +160,7 @@ To narrow the gap between validation and new people, three ideas were tested on 
 | Landmark classifier alone (Random Forest) | 0.903 | 86.7% | 0.873 | 87.4% | -3.4 points (-12.3 to +2.7) |
 | **Selected fusion:** v1 ensemble + v2 CNN + landmark (weights 0.1 / 0.2 / 0.7) | 0.960 | **93.1%** | **0.929** | **94.4%** | +3.1 points (-0.1 to +7.8) |
 
-The fusion was selected because it had the best validation macro-F1 and it is the best candidate on every test metric, but its gain over the v1 ensemble is **not statistically established**: the interval just includes 0. Only two simpler fusions pass the rule on all test images: v1 ensemble + landmark (+2.9 points, +0.2 to +6.7) and v1 ensemble + v2 CNN (+1.5 points, +0.6 to +2.6). On originals only, no candidate has a real gain. The landmark classifier is the weakest model alone, but it adds the most in fusion because it makes different mistakes from the image models. Among the hard letters, Fay (+0.15 F1), Taay (+0.12) and Zay (+0.03) improved, Kiaf and Nuungh changed little and Tay stayed the same. Daal (-0.14), Zuey (-0.13) and Zuad (-0.09) got worse. The fusion costs about 55 ms per frame more than the v1 ensemble (an extra MobileNetV2, estimated from the earlier CPU timing; the landmark model reuses the MediaPipe landmarks the app already computes).
+The fusion was selected for its best validation macro-F1 and is also best on every test metric, but its gain over the v1 ensemble is not statistically established (the interval just includes 0). Only two simpler fusions pass the rule: v1 ensemble + landmark (+2.9 points, +0.2 to +6.7) and v1 ensemble + v2 CNN (+1.5 points, +0.6 to +2.6). Most hard letters improved (Fay +0.15 F1, Taay +0.12), but Daal, Zuey and Zuad got worse (-0.09 to -0.14). The fusion costs about 55 ms more per frame than the v1 ensemble (estimate: one extra MobileNetV2).
 
 ---
 
@@ -219,6 +219,7 @@ SignSense/
 | 2 | `dynamic_models` | dynamic letter models with cross-validation |
 | 2 | `pipeline` | control gestures, router study, typing engine, simulation |
 | 2 | `app_prep` | float32 export, CPU speed, app configuration |
+| 2 | `static_improvement` | landmark classifier, improved CNN recipe, fusion of models, test evaluation of the candidates |
 
 ## 📚 Detailed documentation
 
