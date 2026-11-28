@@ -149,6 +149,19 @@ Hundreds of words were typed through the whole pipeline using held-out test imag
 
 Dictionary correction fixes many single-letter errors in known words but cannot help names. One wrong letter spoils a whole word, so word accuracy is far below letter accuracy.
 
+### 🔬 Improvement round (static letters)
+
+To narrow the gap between validation and new people, three ideas were tested on the **validation split only**: a **landmark classifier** (hand shape without background or skin tone), an improved **CNN training recipe** (stronger augmentation, label smoothing, all layers fine-tuned with a cosine schedule), and a **fusion** of both with the earlier ensemble. The test set only reported the candidates; a gain counts as real only if the paired bootstrap interval excludes 0.
+
+| Candidate | Val macro-F1 | Test acc | Test macro-F1 | Test acc (originals) | Gain vs v1 ensemble (95% CI) |
+|---|---|---|---|---|---|
+| v1 CNN ensemble (previous) | 0.951 | 89.8% | 0.897 | 93.0% | n/a |
+| v2 CNN alone (MobileNetV2, v2b recipe) | 0.940 | 88.4% | 0.881 | 91.9% | -1.2 points (-5.5 to +3.1) |
+| Landmark classifier alone (Random Forest) | 0.903 | 86.7% | 0.873 | 87.4% | -3.4 points (-12.3 to +2.7) |
+| **Selected fusion:** v1 ensemble + v2 CNN + landmark (weights 0.1 / 0.2 / 0.7) | 0.960 | **93.1%** | **0.929** | **94.4%** | +3.1 points (-0.1 to +7.8) |
+
+The fusion was selected because it had the best validation macro-F1 and it is the best candidate on every test metric, but its gain over the v1 ensemble is **not statistically established**: the interval just includes 0. Only two simpler fusions pass the rule on all test images: v1 ensemble + landmark (+2.9 points, +0.2 to +6.7) and v1 ensemble + v2 CNN (+1.5 points, +0.6 to +2.6). On originals only, no candidate has a real gain. The landmark classifier is the weakest model alone, but it adds the most in fusion because it makes different mistakes from the image models. Among the hard letters, Fay (+0.15 F1), Taay (+0.12) and Zay (+0.03) improved, Kiaf and Nuungh changed little and Tay stayed the same. Daal (-0.14), Zuey (-0.13) and Zuad (-0.09) got worse. The fusion costs about 55 ms per frame more than the v1 ensemble (an extra MobileNetV2, estimated from the earlier CPU timing; the landmark model reuses the MediaPipe landmarks the app already computes).
+
 ---
 
 ## 🌐 Web app

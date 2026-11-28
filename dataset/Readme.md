@@ -22,6 +22,7 @@ The raw data is about 5 GB and is **not stored in this repository**. The noteboo
 | `dynamic_landmarks.npz` | `preprocessing.ipynb` | MediaPipe hand-landmark sequences for the 393 videos: array `X` (393, 88, 63), detection `mask`, labels `y`, `split`, `files` |
 | `control_gestures.csv` | `scripts/collect_gestures.py` | 1,634 recorded hand-landmark samples of the **space** (open palm, 3 people) and **delete** (thumbs down, 3 people) gestures. Only landmarks are stored, no images or faces |
 
+
  
 The processed 224x224 images (about 400 MB) are **regenerated** by `preprocessing.ipynb` and are not committed.
  

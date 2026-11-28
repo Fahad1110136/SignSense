@@ -1,0 +1,20 @@
+{
+ "selected": "v1 ensemble + v2 CNN + landmark",
+ "components": {
+  "cnn1_ens": 0.1,
+  "cnn2": 0.2,
+  "lm": 0.7
+ },
+ "cnn_v2_file": "mobilenetv2_v2b.keras",
+ "v1_ensemble_files": [
+  "baseline_cnn_fp32.keras",
+  "mobilenetv2_fp32.keras",
+  "efficientnetb0_fp32.keras"
+ ],
+ "landmark_model": {
+  "family": "RandomForest",
+  "augmentation": "none",
+  "file": "static_landmark_clf.joblib",
+  "features": "63 normalized coordinates + 210 pairwise distances"
+ }
+}

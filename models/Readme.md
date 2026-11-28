@@ -82,6 +82,22 @@ The typing engine itself (`typing_engine.py`) lives in `scripts/`, and a copy is
 | `control_threshold_table.csv` | `pipeline.ipynb` | Recall of space and delete and false-alarm rates for thresholds from 0.50 upward |
 | `pipeline_simulation_sweep.csv` | `pipeline.ipynb` | Simulated word accuracy, character error rate, delay and error types for every model, confidence threshold, stability setting and correction on or off, for dictionary and unknown words |
 
+### Static improvement round results
+
+| File | Produced by | Description |
+|---|---|---|
+| `mobilenetv2_v2a.keras`, `mobilenetv2_v2b.keras` | `static_improvement.ipynb` | MobileNetV2 trained with the improved recipe (v2a: stronger augmentation + label smoothing; v2b: also all layers fine-tuned with a cosine schedule). Mixed-precision models: convert to float32 for the CPU app, as in `app_prep.ipynb`. Keep only the chosen one |
+| `static_landmark_clf.joblib` | `static_improvement.ipynb` | Classifier on hand landmarks (63 normalized coordinates + 210 pairwise distances). scikit-learn version-sensitive: the app retrains it from data if loading fails |
+| `static_improvement_config.json` | `static_improvement.ipynb` | Selected candidate, fusion weights and file names |
+| `static_improvement_val.csv` | `static_improvement.ipynb` | Validation accuracy and macro-F1 of every fusion candidate (weights tuned on validation) |
+| `static_improvement_test.csv` | `static_improvement.ipynb` | Test metrics (all images / originals only) of every candidate |
+| `static_improvement_ci.csv` | `static_improvement.ipynb` | 95% subject-level bootstrap intervals of the test accuracy |
+| `static_improvement_diffs.csv` | `static_improvement.ipynb` | Paired gain of each candidate over the current v1 ensemble, with a `real_improvement` flag |
+| `static_improvement_per_class_gain.csv` | `static_improvement.ipynb` | Change in test F1 per letter |
+| `static_landmark_models_val.csv` | `static_improvement.ipynb` | Validation results of the landmark model families and augmentation options |
+| `static_cnn_v2_val.csv` | `static_improvement.ipynb` | Validation results of the two CNN recipes |
+| `static_improvement_test_predictions.npz` | `static_improvement.ipynb` | Fused test probabilities (float16) of every candidate, with the labels |
+
 ## Results summary
 
 ### Static letters (test set, people never seen in training)
@@ -115,6 +131,7 @@ No difference between the Random Forest and the other families is clearly signif
 | Random Forest | 0.9 | 94.9% | 93.3% | 0% | 0% |
 
 The app uses a lower threshold of 0.83, chosen from `control_threshold_table.csv`, which gives recall of about 99% (space) and 98.5% (delete) with false alarms around 0.2% per frame. The classifier was trained on gestures recorded by 3 people.
+
 
 ## What the app uses
 
